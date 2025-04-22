@@ -29,9 +29,9 @@ Create a `.env` file in the root directory with the following content:
 ```
 DB_HOST=192.168.7.234
 DB_PORT=1521
-DB_USERNAME=his_rs
-DB_PASSWORD=his_rs
-DB_SID=orclstb
+DB_USERNAME=username_db
+DB_PASSWORD=password_db
+DB_SID=orcl
 ```
 
 ## Running the application
