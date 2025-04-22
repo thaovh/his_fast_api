@@ -7,6 +7,7 @@ import { WinstonModule } from 'nest-winston';
 import { HealthModule } from './modules/health/health.module';
 import { TreatmentModule } from './modules/treatment/treatment.module';
 import { PatientModule } from './modules/patient/patient.module';
+import { DynamicModule } from './modules/dynamic/dynamic.module';
 import { ApiKeyMiddleware } from './middleware/api-key.middleware';
 
 @Module({
@@ -22,7 +23,8 @@ import { ApiKeyMiddleware } from './middleware/api-key.middleware';
         }),
         HealthModule,
         TreatmentModule,
-        PatientModule
+        PatientModule,
+        DynamicModule
     ],
     controllers: [],
     providers: [],

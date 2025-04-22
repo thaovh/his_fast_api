@@ -1,3 +1,4 @@
+his_treatment
 -- Query to get treatment records within a time range
 SELECT 
     ID, 
