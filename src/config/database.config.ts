@@ -1,12 +1,19 @@
-import { registerAs } from '@nestjs/config';
+import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 
-export default registerAs('database', () => ({
+export const databaseConfig: TypeOrmModuleOptions = {
     type: 'oracle',
-    host: process.env.DB_HOST || '',
-    port: process.env.DB_PORT ? parseInt(process.env.DB_PORT, 10) : 1521,
-    username: process.env.DB_USERNAME || '',
-    password: process.env.DB_PASSWORD || '',
-    serviceName: process.env.DB_SERVICE_NAME || '',
-    synchronize: process.env.NODE_ENV === 'development',
-    logging: process.env.NODE_ENV === 'development',
-})); 
+    host: '192.168.7.234',
+    port: 1521,
+    username: 'his_rs',
+    password: 'his_rs',
+    sid: 'orclstb',
+    synchronize: false,
+    logging: true,
+    entities: ['dist/**/*.entity{.ts,.js}'],
+    migrations: ['dist/migrations/*{.ts,.js}'],
+    migrationsRun: false,
+    extra: {
+        max: 20,
+        connectionTimeout: 10000,
+    },
+}; 

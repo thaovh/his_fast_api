@@ -1,60 +1,94 @@
-# HIS Fast API
+# HIS FASH API
 
-A FastAPI-based REST API for HIS (Hospital Information System) data retrieval.
+A NestJS application with Oracle 12c database integration.
 
 ## Features
 
-- Accept time input in format DD/MM/YYYY HH:mm:ss
-- Convert input time to Oracle format (YYYYMMDDHHmmss) for database queries
-- Clear error messages for invalid time formats
-- Swagger UI documentation with examples
+- Oracle 12c database integration
+- Swagger API documentation
+- Winston logger
+- Health check endpoint
+- Raw SQL query execution
+- RESTful API with proper status codes
+
+## Prerequisites
+
+- Node.js (v14 or higher)
+- Oracle 12c database
+- Oracle Instant Client
 
 ## Installation
 
-1. Clone the repository:
-```bash
-git clone https://github.com/thaovh/his_fast_api.git
-cd his_fast_api
-```
-
-2. Install dependencies:
+1. Install dependencies:
 ```bash
 npm install
 ```
 
-3. Create a `.env` file with your configuration:
-```env
-PORT=3000
-ORACLE_USER=your_username
-ORACLE_PASSWORD=your_password
-ORACLE_CONNECT_STRING=your_connect_string
+2. Configure environment variables:
+Create a `.env` file in the root directory with the following content:
+```
+DB_HOST=192.168.7.234
+DB_PORT=1521
+DB_USERNAME=his_rs
+DB_PASSWORD=his_rs
+DB_SID=orclstb
 ```
 
-4. Start the server:
-```bash
-npm start
-```
-
-## API Usage
-
-### Get Treatments by Time Range
+## Running the application
 
 ```bash
-curl -X GET "http://localhost:3000/api/treatments?startTime=01/01/2024 00:00:00&endTime=31/01/2024 23:59:59"
+# development
+npm run start:dev
+
+# production mode
+npm run start:prod
 ```
 
-The API accepts:
-- `startTime`: Start time in format DD/MM/YYYY HH:mm:ss
-- `endTime`: End time in format DD/MM/YYYY HH:mm:ss
+## API Documentation
+
+Once the application is running, you can access the Swagger documentation at:
+```
+http://localhost:3000/api
+```
+
+## Health Check
+
+The health check endpoint is available at:
+```
+http://localhost:3000/health
+```
+
+## Project Structure
+
+```
+src/
+├── config/           # Configuration files
+├── modules/          # Feature modules
+├── common/           # Shared resources
+├── raw_query/        # SQL query files
+├── app.module.ts     # Main application module
+└── main.ts          # Application entry point
+```
+
+## API Endpoints
+
+### Treatments
+
+GET /treatments
+- Query Parameters:
+  - timeFrom: Start time
+  - timeTo: End time
+- Returns: List of treatments within the specified time range
 
 ## Error Handling
 
-The API provides clear error messages for:
-- Invalid date format
-- Start time after end time
-- Database connection issues
-- Query execution errors
+The API uses standard HTTP status codes:
+- 200: Success
+- 400: Bad Request
+- 500: Internal Server Error
 
-## Documentation
+## Logging
 
-API documentation is available at `/swagger` when the server is running.
+Logs are stored in the `logs` directory:
+- error.log: Error level logs
+- combined.log: All logs 

@@ -1,0 +1,10 @@
+-- Query to get patient by ID
+SELECT 
+    ID,
+    PATIENT_NAME,
+    DATE_OF_BIRTH,
+    GENDER,
+    ADDRESS,
+    PHONE_NUMBER
+FROM HIS_PATIENT
+WHERE ID = :ID 
