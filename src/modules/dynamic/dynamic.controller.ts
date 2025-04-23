@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Put, Delete, Param, Body, Query, HttpStatus, HttpException } from '@nestjs/common';
+import { Controller, Get, Post, Put, Delete, Param, Body, Query, HttpStatus, HttpException, BadRequestException, NotFoundException, InternalServerErrorException } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiQuery, ApiBearerAuth } from '@nestjs/swagger';
 import { DynamicService } from './dynamic.service';
 import { ApiResponseDto } from '../../common/dto/api-response.dto';
@@ -23,15 +23,43 @@ export class DynamicController {
         status: 200,
         description: 'Returns query results'
     })
+    @ApiResponse({
+        status: 400,
+        description: 'Bad request - Invalid parameters'
+    })
+    @ApiResponse({
+        status: 404,
+        description: 'Endpoint not found'
+    })
+    @ApiResponse({
+        status: 500,
+        description: 'Internal server error'
+    })
     async handleGet(
         @Param('endpoint') endpoint: string,
         @Query() queryParams: any
     ): Promise<ApiResponseDto<any>> {
         try {
+            if (!endpoint) {
+                throw new BadRequestException('Endpoint name is required');
+            }
+
             const result = await this.dynamicService.executeQuery(endpoint, 'GET', queryParams);
             return new ApiResponseDto(result);
         } catch (error) {
-            throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
+            if (error instanceof HttpException) {
+                throw error;
+            }
+
+            if (error.message.includes('not found')) {
+                throw new NotFoundException(error.message);
+            }
+
+            if (error.message.includes('Invalid SQL')) {
+                throw new BadRequestException(error.message);
+            }
+
+            throw new InternalServerErrorException(`Error executing query: ${error.message}`);
         }
     }
 
@@ -49,15 +77,43 @@ export class DynamicController {
         status: 200,
         description: 'Returns query results'
     })
+    @ApiResponse({
+        status: 400,
+        description: 'Bad request - Invalid parameters'
+    })
+    @ApiResponse({
+        status: 404,
+        description: 'Endpoint not found'
+    })
+    @ApiResponse({
+        status: 500,
+        description: 'Internal server error'
+    })
     async handlePost(
         @Param('endpoint') endpoint: string,
         @Body() body: any
     ): Promise<ApiResponseDto<any>> {
         try {
+            if (!endpoint) {
+                throw new BadRequestException('Endpoint name is required');
+            }
+
             const result = await this.dynamicService.executeQuery(endpoint, 'POST', body);
             return new ApiResponseDto(result);
         } catch (error) {
-            throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
+            if (error instanceof HttpException) {
+                throw error;
+            }
+
+            if (error.message.includes('not found')) {
+                throw new NotFoundException(error.message);
+            }
+
+            if (error.message.includes('Invalid SQL')) {
+                throw new BadRequestException(error.message);
+            }
+
+            throw new InternalServerErrorException(`Error executing query: ${error.message}`);
         }
     }
 } 
