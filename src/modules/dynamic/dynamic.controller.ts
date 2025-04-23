@@ -1,11 +1,14 @@
-import { Controller, Get, Post, Put, Delete, Param, Body, Query, HttpStatus, HttpException, BadRequestException, NotFoundException, InternalServerErrorException } from '@nestjs/common';
+import { Controller, Get, Post, Put, Delete, Param, Body, Query, HttpStatus, HttpException, BadRequestException, NotFoundException, InternalServerErrorException, UseGuards } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiQuery, ApiBearerAuth } from '@nestjs/swagger';
 import { DynamicService } from './dynamic.service';
 import { ApiResponseDto } from '../../common/dto/api-response.dto';
+import { ApiKeyGuard } from '../auth/guards/api-key.guard';
+import { RateLimitGuard } from '../rate-limit/rate-limit.guard';
 
 @ApiTags('dynamic')
 @ApiBearerAuth('access-token')
 @Controller('dynamic')
+@UseGuards(ApiKeyGuard, RateLimitGuard)
 export class DynamicController {
     constructor(private readonly dynamicService: DynamicService) { }
 
